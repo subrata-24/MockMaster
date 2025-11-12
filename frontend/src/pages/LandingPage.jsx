@@ -3,6 +3,8 @@ import image from "../assets/image.png";
 import { APP_FEATURES } from "../utils/data.js";
 import { useNavigate } from "react-router-dom";
 import { LuSparkles } from "react-icons/lu";
+import Login from "./auth/Login.jsx";
+import SignUp from "./auth/SignUp.jsx";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -128,6 +130,23 @@ const LandingPage = () => {
           </div>
         </section>
       </div>
+
+      {/* Authentication Modal - Conditionally renders Login or SignUp components based on currentPage state. Modal resets to login view on close. */}
+      <Modal
+        isOpen={openAuthModal}
+        onClose={() => {
+          setOpenAuthModal(false);
+          setCurrentPage("login");
+        }}
+      >
+        <div>
+          {/*Pass setCurrentPage function as prop to child components to allow switching between signup/login views.In login and signup page there is "setCurrentPage" named function*/}
+          {currentPage == "login" && <Login setCurrentPage={setCurrentPage} />}
+          {currentPage == "signup" && (
+            <SignUp setCurrentPage={setCurrentPage} />
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };
