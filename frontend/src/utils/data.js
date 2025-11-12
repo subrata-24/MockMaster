@@ -29,4 +29,10 @@ export const APP_FEATURES = [
     description:
       "Save unlimited interview sessions, organize them by role or topic, and resume your preparation anytime from exactly where you stopped—ensuring nothing falls through the cracks.",
   },
+  {
+    id: "06",
+    title: "Delete Questions When You Don't Need Them",
+    description:
+      "Keep your workspace clean and focused by removing questions that are no longer relevant or have been fully mastered—giving you a clutter-free study environment that prioritizes what truly matters for your next interview.",
+  },
 ];

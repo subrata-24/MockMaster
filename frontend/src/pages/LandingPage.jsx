@@ -78,15 +78,52 @@ const LandingPage = () => {
 
           <div className="w-full md:w-1/2">
             <div className="relative">
-              {/* Subtle glow behind image */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-teal-600/20 rounded-xl blur-xl"></div>
-
-              {/* Image */}
               <img
                 src={image}
                 alt="Interview Prep Dashboard"
                 className="relative w-full rounded-xl shadow-2xl border border-gray-700"
               />
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section - Professional Dark Theme */}
+        <section className="py-24 px-4 bg-gray-900">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                Features that make you{" "}
+                <span className="bg-gradient-to-r from-blue-400 to-teal-400 bg-clip-text text-transparent">
+                  shine
+                </span>
+              </h2>
+              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                Everything you need to master interviews and land your dream job
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {APP_FEATURES.map((feature) => (
+                <div
+                  key={feature.id}
+                  className="group bg-gray-800 p-8 rounded-xl border border-gray-700 hover:border-blue-500/50 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    {(feature.id === "02" || feature.id === "04") && (
+                      <span className="text-xs font-semibold text-teal-400 bg-teal-400/10 px-2 py-1 rounded-full border border-teal-400/30">
+                        AI-Powered
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-4 leading-tight group-hover:text-blue-400 transition-colors duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed text-base">
+                    {feature.description}
+                  </p>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-600 to-teal-600 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
