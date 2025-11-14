@@ -4,7 +4,7 @@ const questionSchema = new mongoose.Schema(
   {
     session: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "session",
+      ref: "Session",
     },
     question: String,
     answer: String,
