@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
+import { validateEmail, validatePassword } from "../../utils/helper";
 
 const Login = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
@@ -13,13 +14,25 @@ const Login = ({ setCurrentPage }) => {
   // Handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your login logic here
+    if (!validateEmail(email)) {
+      setError("Email is not correct");
+      return;
+    }
+    setError(null);
+    const passVal = validatePassword(password);
+    if (passVal) {
+      setError(passVal);
+      return;
+    }
+    setError(null);
   };
 
   // Handle show password
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  console.log(error);
 
   return (
     <div className="w-full">

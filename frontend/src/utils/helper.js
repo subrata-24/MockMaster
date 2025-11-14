@@ -1,6 +1,6 @@
 export const validateEmail = (email) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  regex.test(email);
+  return regex.test(email);
   //test method is a built-in JavaScript method that belongs to the RegExp prototype.
 };
 
@@ -23,5 +23,5 @@ export const validatePassword = (password) => {
   if (ch === 0) return "Password must contain at least one character";
   if (sp === 0) return "Password must contain at least one special character";
 
-  return true;
+  return null;
 };

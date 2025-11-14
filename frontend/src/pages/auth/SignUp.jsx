@@ -21,6 +21,22 @@ const SignUp = ({ setCurrentPage }) => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (fullName.length < 2) {
+      setError("Name must contain at least 2 character");
+      return;
+    }
+    setError(null);
+    if (!validateEmail(email)) {
+      setError("Email is not correct");
+      return;
+    }
+    setError(null);
+    const passVal = validatePassword(password);
+    if (passVal) {
+      setError(passVal);
+      return;
+    }
+    setError(null);
   };
 
   // Toggle password visibility on eye icon click
