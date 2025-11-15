@@ -6,6 +6,7 @@ import { LuSparkles } from "react-icons/lu";
 import Login from "./auth/Login.jsx";
 import SignUp from "./auth/SignUp.jsx";
 import Modal from "../components/loader/Modal.jsx";
+import OTP from "./auth/OTP.jsx";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -146,6 +147,7 @@ const LandingPage = () => {
           {currentPage == "signup" && (
             <SignUp setCurrentPage={setCurrentPage} />
           )}
+          {currentPage == "otp" && <OTP setCurrentPage={setCurrentPage} />}
         </div>
       </Modal>
     </div>

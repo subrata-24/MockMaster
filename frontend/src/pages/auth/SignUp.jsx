@@ -193,12 +193,13 @@ const SignUp = ({ setCurrentPage }) => {
         <button
           type="submit"
           className="w-full bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer hover:scale-105"
+          onClick={() => setCurrentPage("otp")}
         >
           Sign Up
         </button>
       </form>
 
-      {/* Sign Up Link */}
+      {/* Log in Link */}
       <div className="mt-6 text-center text-sm text-gray-400">
         Already have an account?{" "}
         <button
