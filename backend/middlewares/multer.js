@@ -17,3 +17,23 @@ const storage = multer.diskStorage({
 });
 
 export const upload = multer({ storage });
+
+/*
+  Now when we use multer like that:
+  "router.post("/signup", upload.single("image"), signUp);"
+  When comes to this route:
+  multer catches the uploaded file
+  Saves it to  local ./public folder (because I configured diskStorage)
+  Adds this object to the request:
+
+  req.file = {
+    fieldname: 'image',
+    originalname: 'photo.png',
+    encoding: '7bit',
+    mimetype: 'image/png',
+    destination: './public',
+    filename: 'image-123456789.png',
+    path: 'public/image-123456789.png',
+    size: 12345
+  }
+*/
