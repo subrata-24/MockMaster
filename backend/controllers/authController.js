@@ -1,11 +1,50 @@
-import uploadOnCloudinary from "../utils/cloudinary";
+import User from "../models/user.js";
+import uploadOnCloudinary from "../utils/cloudinary.js";
+import bcrypt from "bcrypt";
+import genToken from "../utils/token.js";
+import { sendSignUpOTP } from "../utils/mailer.js";
 
 export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     let imageUrl;
     if (req.file) {
-      image = await uploadOnCloudinary(req.file.path);
+      imageUrl = await uploadOnCloudinary(req.file.path);
     }
-  } catch (error) {}
+    let user = await User.findOne({ email });
+    if (user && user.isEmailVerified) {
+      return res.status(400).json({ message: "This user is already exist" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user = await User.create({
+      name,
+      email,
+      profileImageUrl: imageUrl,
+      password: hashedPassword,
+    });
+
+    const token = genToken(user._id);
+
+    //When call res.cookie(), the server sends a Set-Cookie header in the HTTP response, and the browser automatically stores this data in cookie.
+    res.cookie("token", token, {
+      // secure: false - Cookie can be sent over HTTP (not just HTTPS).Set to true in production to ensure cookie is only sent over HTTPS for security
+      secure: false,
+      // sameSite: "strict" - Prevents CSRF (Cross-Site Request Forgery) attacks.The cookie will only be sent with requests from the same site.Options: "strict" (most secure), "lax" (default), "none" (least secure, requires secure: true)
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      // httpOnly: true - The cookie cannot be accessed via JavaScript (document.cookie).This protects against XSS (Cross-Site Scripting) attacks.Only the server can read this cookie, making it more secure
+      httpOnly: true,
+    });
+
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    user.otp = otp;
+    user.otpExpires = Date.now() + 5 * 60 * 1000;
+    await user.save();
+    await sendSignUpOTP({ to: email, otp });
+
+    return res.status(201).json(user);
+  } catch (error) {
+    return res.status(500).json(`Sign up error ${error}`);
+  }
 };

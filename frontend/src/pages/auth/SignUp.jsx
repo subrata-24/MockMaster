@@ -4,6 +4,7 @@ import { FaEye, FaFileUpload, FaTrashAlt, FaUser } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
 import axios from "axios";
 import { serverUrl } from "../../App";
+import { validateEmail, validatePassword } from "../../utils/helper";
 
 const SignUp = ({ setCurrentPage }) => {
   const [fullName, setFullName] = useState("");
@@ -24,6 +25,7 @@ const SignUp = ({ setCurrentPage }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     if (fullName.length < 2) {
       setError("Name must contain at least 2 character");
       return;
@@ -33,13 +35,12 @@ const SignUp = ({ setCurrentPage }) => {
       setError("Email is not correct");
       return;
     }
-    setError(null);
+
     const passVal = validatePassword(password);
     if (passVal) {
       setError(passVal);
       return;
     }
-    setError(null);
 
     try {
       const formData = new FormData();
@@ -54,6 +55,8 @@ const SignUp = ({ setCurrentPage }) => {
         `${serverUrl}/api/auth/sign-up`,
         formData
       );
+
+      setCurrentPage("otp");
 
       console.log(result.data);
     } catch (error) {
@@ -216,7 +219,6 @@ const SignUp = ({ setCurrentPage }) => {
         <button
           type="submit"
           className="w-full bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer hover:scale-105"
-          onClick={() => setCurrentPage("otp")}
         >
           Sign Up
         </button>
