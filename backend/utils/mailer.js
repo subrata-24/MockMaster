@@ -15,3 +15,12 @@ const transporter = nodemailer.createTransport({
     pass: process.env.APP_PASSWORD,
   },
 });
+
+export const sendSignUpOTP = async ({ to, otp }) => {
+  await transporter.sendMail({
+    from: process.env.EMAIL,
+    to,
+    subject: "Verify your sign up otp",
+    html: `Your OTP for sign up verification is ${otp}.It will expires in 5 minutes`,
+  });
+};
