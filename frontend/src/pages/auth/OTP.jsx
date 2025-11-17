@@ -1,8 +1,25 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { serverUrl } from "../../App";
 
 const OTP = () => {
   const [otp, setOtp] = useState("");
-  const handleSubmit = () => {};
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append(otp);
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/verify-signup-otp`,
+        formData,
+        { withCredentials: true }
+      );
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="mb-6">
