@@ -2,10 +2,13 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaFileUpload, FaTrashAlt, FaUser } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
+import axios from "axios";
+import { serverUrl } from "../../App";
 
 const SignUp = ({ setCurrentPage }) => {
   const [fullName, setFullName] = useState("");
   const [image, setImage] = useState(null);
+  const [backendImage, setBackendImage] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -19,7 +22,7 @@ const SignUp = ({ setCurrentPage }) => {
   */
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (fullName.length < 2) {
       setError("Name must contain at least 2 character");
@@ -37,6 +40,25 @@ const SignUp = ({ setCurrentPage }) => {
       return;
     }
     setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("name", fullName);
+      formData.append("email", email);
+      formData.append("password", password);
+      if (backendImage) {
+        formData.append("image", backendImage);
+      }
+
+      const result = await axios.post(
+        `${serverUrl}/api/auth/sign-up`,
+        formData
+      );
+
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Toggle password visibility on eye icon click
@@ -46,6 +68,7 @@ const SignUp = ({ setCurrentPage }) => {
 
   // Handle image file selection from hidden input
   const handleImage = (e) => {
+    setBackendImage(e.target.files[0]);
     const file = e.target.files[0];
     // Create a local URL for previewing the uploaded file
     setImage(URL.createObjectURL(file));

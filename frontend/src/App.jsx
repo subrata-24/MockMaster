@@ -6,6 +6,8 @@ import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/home/Dashboard";
 import InterviewPrep from "./pages/InterviewPrep/InterviewPrep";
+export const serverUrl = "http://localhost:5000";
+
 const App = () => {
   return (
     <div>
