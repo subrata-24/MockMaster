@@ -48,3 +48,44 @@ export const signUp = async (req, res) => {
     return res.status(500).json(`Sign up error ${error}`);
   }
 };
+
+export const verifySignUpOTP = async (req, res) => {
+  try {
+    const { otp } = req.body;
+    const userId = req.userId;
+    if (!otp) {
+      return res.status(400).json({ error: "OTP is required" });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: "User is not found" });
+    }
+    if (user.otpExpires < Date.now()) {
+      return res
+        .status(400)
+        .json({ error: "OTP is expired.Request for new OTP" });
+    }
+    if (user.otp !== otp) {
+      return res.status(400).json({ error: "You entered a invalid OTP" });
+    }
+
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    user.isOtpVerified = true;
+    user.isEmailVerified = true;
+    await user.save();
+
+    return res.status(200).json({
+      message: "OTP verified successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profileImageUrl: user.profileImageUrl,
+        isEmailVerified: user.isEmailVerified,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to verify OTP" });
+  }
+};
