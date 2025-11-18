@@ -7,11 +7,21 @@ import Login from "./auth/Login.jsx";
 import SignUp from "./auth/SignUp.jsx";
 import Modal from "../components/loader/Modal.jsx";
 import OTP from "./auth/OTP.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../redux/userSlice.js";
 
 const LandingPage = () => {
+  const { userData } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [currentPage, setCurrentPage] = useState("login");
+  const dispatch = useDispatch();
+
+  const handleSuccessSignIn = (user) => {
+    dispatch(setUserData(user));
+    setOpenAuthModal(false);
+    setCurrentPage("login");
+  };
 
   const handleCTA = () => {};
   return (
@@ -28,12 +38,38 @@ const LandingPage = () => {
           <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-teal-400 bg-clip-text text-transparent">
             Interview Preparation AI
           </div>
-          <button
-            onClick={() => setOpenAuthModal(true)}
-            className="bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 cursor-pointer hover:scale-105"
-          >
-            Login / Sign Up
-          </button>
+          {userData ? (
+            // Show User Profile
+            <div className="flex items-center gap-3 bg-gray-800 px-4 py-2 rounded-full border border-gray-700 shadow-lg">
+              {userData.profileImageUrl ? (
+                <img
+                  src={userData.profileImageUrl}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-blue-500"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-teal-600 flex items-center justify-center font-bold text-white">
+                  {userData.name?.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="hidden md:block">
+                <p className="text-sm font-semibold text-white">
+                  {userData.name}
+                </p>
+                <p className="text-xs text-gray-400 truncate max-w-[150px]">
+                  {userData.email}
+                </p>
+              </div>
+            </div>
+          ) : (
+            // Show Login Button
+            <button
+              onClick={() => setOpenAuthModal(true)}
+              className="bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 cursor-pointer hover:scale-105"
+            >
+              Login / Sign Up
+            </button>
+          )}
         </header>
 
         {/* Hero Content */}
@@ -147,7 +183,9 @@ const LandingPage = () => {
           {currentPage == "signup" && (
             <SignUp setCurrentPage={setCurrentPage} />
           )}
-          {currentPage == "otp" && <OTP setCurrentPage={setCurrentPage} />}
+          {currentPage == "otp" && (
+            <OTP handleSuccessSignIn={handleSuccessSignIn} />
+          )}
         </div>
       </Modal>
     </div>

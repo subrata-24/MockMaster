@@ -2,20 +2,29 @@ import axios from "axios";
 import React, { useState } from "react";
 import { serverUrl } from "../../App";
 
-const OTP = () => {
+const OTP = ({ handleSuccessSignIn }) => {
   const [otp, setOtp] = useState("");
+  const [showError, setShowError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowError(null);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/verify-signup-otp`,
         { otp },
         { withCredentials: true }
       );
-      console.log(result.data);
+      if (result.status == 200) {
+        handleSuccessSignIn(result.data.user);
+      }
     } catch (error) {
       console.log(error);
+      if (error.response && error.response.data && error.response.data.error)
+        setShowError(error.response.data.error);
+      else {
+        setShowError("Something went wrong.Please try again later");
+      }
     }
   };
 
@@ -45,6 +54,13 @@ const OTP = () => {
             required
           />
         </div>
+
+        {showError && (
+          <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg text-sm">
+            {showError}
+          </div>
+        )}
+
         <button
           type="submit"
           className="w-full bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer hover:scale-105"
