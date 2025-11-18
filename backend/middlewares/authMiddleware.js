@@ -15,7 +15,6 @@ dotenv.config();
     This allows controllers to access req.userId to fetch user info from the database and provide authenticated responses.
 */
 const isAuth = async (req, res, next) => {
-  console.log("execution comes here");
   try {
     const token = req.cookies.token;
     if (!token) {
@@ -26,7 +25,6 @@ const isAuth = async (req, res, next) => {
       return res.status(400).json({ message: "Token can not be decoded" });
     }
     req.userId = decodeToken.userId;
-    console.log("Is auth success");
     next();
   } catch (error) {
     return res.status(500).json(`Find error to authenticate user ${error}`);

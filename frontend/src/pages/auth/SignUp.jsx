@@ -53,7 +53,8 @@ const SignUp = ({ setCurrentPage }) => {
 
       const result = await axios.post(
         `${serverUrl}/api/auth/sign-up`,
-        formData
+        formData,
+        { withCredentials: true }
       );
 
       setCurrentPage("otp");

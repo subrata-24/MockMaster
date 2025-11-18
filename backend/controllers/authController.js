@@ -7,32 +7,13 @@ import { sendSignUpOTP } from "../utils/mailer.js";
 export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
-    console.log("Signup request received");
-    console.log("File uploaded:", !!req.file);
-
-    if (req.file) {
-      console.log("File details:", {
-        fieldname: req.file.fieldname,
-        filename: req.file.filename,
-        path: req.file.path,
-        size: req.file.size,
-        mimetype: req.file.mimetype,
-      });
-    }
     let imageUrl = null;
     if (req.file) {
-      console.log("Uploading to Cloudinary...");
       imageUrl = await uploadOnCloudinary(req.file.path);
 
       if (!imageUrl) {
-        console.error("Cloudinary upload returned null");
-        return res.status(500).json({
-          error: "Failed to upload image. Please try again.",
-        });
+        return res.status(500).json({});
       }
-
-      console.log("✅ Cloudinary URL:", imageUrl);
     }
     let user = await User.findOne({ email });
     if (user && user.isEmailVerified) {

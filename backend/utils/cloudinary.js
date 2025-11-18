@@ -38,7 +38,7 @@ const uploadOnCloudinary = async (file) => {
       fs.unlinkSync(file);
     }
 
-    console.error("Cloudinary upload error:", error.message);
+    // console.error("Cloudinary upload error:", error.message)
     return null;
   }
 };

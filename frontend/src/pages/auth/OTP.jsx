@@ -5,13 +5,12 @@ import { serverUrl } from "../../App";
 const OTP = () => {
   const [otp, setOtp] = useState("");
 
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append(otp);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/verify-signup-otp`,
-        formData,
+        { otp },
         { withCredentials: true }
       );
       console.log(result.data);
