@@ -179,7 +179,12 @@ const LandingPage = () => {
       >
         <div>
           {/*Pass setCurrentPage function as prop to child components to allow switching between signup/login views.In login and signup page there is "setCurrentPage" named function*/}
-          {currentPage == "login" && <Login setCurrentPage={setCurrentPage} />}
+          {currentPage == "login" && (
+            <Login
+              setCurrentPage={setCurrentPage}
+              handleSuccessSignIn={handleSuccessSignIn}
+            />
+          )}
           {currentPage == "signup" && (
             <SignUp setCurrentPage={setCurrentPage} />
           )}

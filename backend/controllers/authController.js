@@ -96,11 +96,12 @@ export const verifySignUpOTP = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
+    console.log("Execution comes here");
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user || !user.isEmailVerified) {
       return res
-        .status(400)
+        .status(404)
         .json({ error: "No account found with this email" });
     }
 

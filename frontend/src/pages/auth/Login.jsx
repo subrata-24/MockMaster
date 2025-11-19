@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
 import { validateEmail, validatePassword } from "../../utils/helper";
+import axios from "axios";
+import { serverUrl } from "../../App";
 
-const Login = ({ setCurrentPage }) => {
+const Login = ({ setCurrentPage, handleSuccessSignIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -12,19 +14,25 @@ const Login = ({ setCurrentPage }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   // Handle submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateEmail(email)) {
-      setError("Email is not correct");
-      return;
-    }
     setError(null);
-    const passVal = validatePassword(password);
-    if (passVal) {
-      setError(passVal);
-      return;
+
+    try {
+      const result = await axios.post(
+        `${serverUrl}/api/auth/login`,
+        { email, password },
+        {
+          withCredentials: true,
+        }
+      );
+      handleSuccessSignIn(result.data);
+    } catch (error) {
+      setError(
+        error.response?.data?.error ||
+          "Something went wrong. Please try again later"
+      );
     }
-    setError(null);
   };
 
   // Handle show password
