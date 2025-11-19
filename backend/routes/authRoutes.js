@@ -1,6 +1,7 @@
 import express from "express";
 import {
   login,
+  signOut,
   signUp,
   verifySignUpOTP,
 } from "../controllers/authController.js";
@@ -12,3 +13,4 @@ export const authrouter = express.Router();
 authrouter.post("/sign-up", upload.single("image"), signUp);
 authrouter.post("/verify-signup-otp", isAuth, verifySignUpOTP);
 authrouter.post("/login", login);
+authrouter.get("/sign-out", signOut);

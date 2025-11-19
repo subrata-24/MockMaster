@@ -96,7 +96,6 @@ export const verifySignUpOTP = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    console.log("Execution comes here");
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user || !user.isEmailVerified) {
@@ -128,5 +127,14 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json(`Failed to login ${error}`);
+  }
+};
+
+export const signOut = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res.status(200).json({ message: "Successfully log out" });
+  } catch (error) {
+    return res.status(500).json({ message: "Log out error" });
   }
 };
