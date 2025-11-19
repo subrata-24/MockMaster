@@ -93,3 +93,39 @@ export const verifySignUpOTP = async (req, res) => {
     return res.status(500).json({ error: "Failed to verify OTP" });
   }
 };
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !user.isEmailVerified) {
+      return res
+        .status(400)
+        .json({ error: "No account found with this email" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res
+        .status(400)
+        .json({ error: "Incorrect password. Please try again." });
+    }
+
+    const token = genToken(user._id);
+    res.cookie("token", token, {
+      secure: false,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    return res.status(200).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      profileImageUrl: user.profileImageUrl,
+      isEmailVerified: user.isEmailVerified,
+    });
+  } catch (error) {
+    return res.status(500).json(`Failed to login ${error}`);
+  }
+};
