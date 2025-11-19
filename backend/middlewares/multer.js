@@ -36,4 +36,6 @@ export const upload = multer({ storage });
     path: 'public/image-123456789.png',
     size: 12345
   }
+  
+  If no file field exists: req.file will be undefined (not null, not an error - just undefined).Multer doesn't throw an error for optional files by default​.The request continues to controller normally.
 */

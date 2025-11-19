@@ -5,6 +5,7 @@ import { FaEyeSlash } from "react-icons/fa6";
 import axios from "axios";
 import { serverUrl } from "../../App";
 import { validateEmail, validatePassword } from "../../utils/helper";
+import toast from "react-hot-toast";
 
 const SignUp = ({ setCurrentPage }) => {
   const [fullName, setFullName] = useState("");
@@ -13,7 +14,7 @@ const SignUp = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const fileInputRef = useRef();
   /* 
@@ -25,6 +26,7 @@ const SignUp = ({ setCurrentPage }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     setError(null);
     if (fullName.length < 2) {
       setError("Name must contain at least 2 character");
@@ -57,11 +59,15 @@ const SignUp = ({ setCurrentPage }) => {
         { withCredentials: true }
       );
 
+      toast.success("OTP send to your email");
       setCurrentPage("otp");
-
-      console.log(result.data);
+      setIsLoading(false);
     } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "SignUp failed. Please try again.";
+      toast.error(errorMessage);
       console.log(error);
+      setIsLoading(false);
     }
   };
 
@@ -219,9 +225,36 @@ const SignUp = ({ setCurrentPage }) => {
         {/* Submit Button */}
         <button
           type="submit"
+          disabled={isLoading}
           className="w-full bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer hover:scale-105"
         >
-          Sign Up
+          {isLoading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg
+                className="animate-spin h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Sending OTP...
+            </span>
+          ) : (
+            "Sign Up"
+          )}
         </button>
       </form>
 
