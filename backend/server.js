@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import { authrouter } from "./routes/authRoutes.js";
+import { userRouter } from "./routes/userRoutes.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -22,6 +23,7 @@ app.use(express.json());
 //cookie-parser is used to read and parse cookies sent from the client (browser) to your server. It converts the Cookie header into a JavaScript object that can be easily access via req.cookies.
 app.use(cookieParser());
 app.use("/api/auth", authrouter);
+app.use("/api/user", userRouter);
 
 app.listen(PORT, () => {
   connectDB();
