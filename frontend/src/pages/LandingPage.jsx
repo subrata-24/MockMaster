@@ -9,6 +9,9 @@ import Modal from "../components/loader/Modal.jsx";
 import OTP from "./auth/OTP.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice.js";
+import axios from "axios";
+import { serverUrl } from "../App.jsx";
+import toast from "react-hot-toast";
 
 const LandingPage = () => {
   const { userData } = useSelector((state) => state.user);
@@ -26,7 +29,22 @@ const LandingPage = () => {
 
   const handleCTA = () => {};
 
-  const handleLogOut = () => {};
+  const handleLogOut = async () => {
+    try {
+      const result = await axios.get(`${serverUrl}/api/auth/sign-out`, {
+        withCredentials: true,
+      });
+      toast.success(result.data.message || "Successfully logged out");
+      setShowInfo(false);
+      dispatch(setUserData(null));
+    } catch (error) {
+      console.log(error);
+      const errorMessage =
+        error.response?.data?.message || "Logout failed. Please try again.";
+      toast.error(errorMessage);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-gray-900 text-gray-50">
       {/* Gradient Background Effect */}
