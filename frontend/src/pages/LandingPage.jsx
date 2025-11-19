@@ -12,6 +12,7 @@ import { setUserData } from "../redux/userSlice.js";
 import axios from "axios";
 import { serverUrl } from "../App.jsx";
 import toast from "react-hot-toast";
+import useGetCurrentUser from "../hooks/useGetCurrentUser.js";
 
 const LandingPage = () => {
   const { userData } = useSelector((state) => state.user);

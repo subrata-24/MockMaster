@@ -6,9 +6,11 @@ import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/home/Dashboard";
 import InterviewPrep from "./pages/InterviewPrep/InterviewPrep";
+import useGetCurrentUser from "./hooks/useGetCurrentUser";
 export const serverUrl = "http://localhost:5000";
 
 const App = () => {
+  useGetCurrentUser();
   return (
     <div>
       <BrowserRouter>
