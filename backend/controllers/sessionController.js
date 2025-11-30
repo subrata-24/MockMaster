@@ -1,5 +1,5 @@
-import Question from "../models/question";
-import Session from "../models/session";
+import Question from "../models/question.js";
+import Session from "../models/session.js";
 
 export const createSession = async (req, res) => {
   try {
@@ -35,6 +35,22 @@ export const createSession = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to create session",
+    });
+  }
+};
+
+export const getMyAllSession = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const sessions = await Session.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .populate("questions");
+    return res.status(200).json({ success: true, sessions });
+  } catch (error) {
+    console.log("Get error when want to get all session", error);
+    return res.status(500).json({
+      success: false,
+      message: "Find error when user want to get all session",
     });
   }
 };
