@@ -78,3 +78,36 @@ export const getSessionById = async (req, res) => {
       .json({ success: false, message: "Error at finding session by id" });
   }
 };
+
+export const deleteSessionById = async (req, res) => {
+  try {
+    const sessionId = req.params.id;
+    const session = await Session.findById(sessionId);
+
+    if (!session) {
+      return res
+        .status(404)
+        .json({ success: false, message: "There is no session with this id" });
+    }
+
+    //Check if this user is valid author of this session or not
+    if (session.user.toString() != req.userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Not authorized to delete this session",
+      });
+    }
+
+    //Delete all the question related to this session
+    await Question.deleteMany({ session: sessionId });
+
+    await session.deleteOne();
+    return res
+      .status(200)
+      .json({ success: true, message: "Deleted Successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Found error when deleteing session" });
+  }
+};
