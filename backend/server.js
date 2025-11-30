@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import { authrouter } from "./routes/authRoutes.js";
 import { userRouter } from "./routes/userRoutes.js";
 import { sessionRouter } from "./routes/sessionRoutes.js";
+import { questionRoutes } from "./routes/questionRoutes.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use("/api/auth", authrouter);
 app.use("/api/user", userRouter);
 app.use("/api/session", sessionRouter);
+app.use("/api/question", questionRoutes);
 
 app.listen(PORT, () => {
   connectDB();
