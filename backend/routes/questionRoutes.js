@@ -1,10 +1,10 @@
 import express from "express";
-import isAuth from "../middlewares/authMiddleware";
+import isAuth from "../middlewares/authMiddleware.js";
 import {
   addNote,
   addQuestions,
   togglePinQuestion,
-} from "../controllers/questionController";
+} from "../controllers/questionController.js";
 
 export const questionRoutes = express.Router();
 
