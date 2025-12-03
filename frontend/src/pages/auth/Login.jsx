@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
-import { validateEmail, validatePassword } from "../../utils/helper";
 import axios from "axios";
 import { serverUrl } from "../../App";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setCurrentPage } from "../../redux/userSlice";
 
-const Login = ({ setCurrentPage, handleSuccessSignIn }) => {
+const Login = ({ handleSuccessSignIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
 
   // Handle submit
   const handleSubmit = async (e) => {
@@ -156,7 +157,7 @@ const Login = ({ setCurrentPage, handleSuccessSignIn }) => {
         Don't have an account?{" "}
         <button
           type="button"
-          onClick={() => setCurrentPage("signup")}
+          onClick={() => dispatch(setCurrentPage("signup"))}
           className="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300 hover:underline cursor-pointer"
         >
           Sign Up

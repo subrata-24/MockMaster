@@ -7,22 +7,33 @@ import SignUp from "./auth/SignUp.jsx";
 import Modal from "../components/loader/Modal.jsx";
 import OTP from "./auth/OTP.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenAuthModal, setUserData } from "../redux/userSlice.js";
+import {
+  setCurrentPage,
+  setOpenAuthModal,
+  setUserData,
+} from "../redux/userSlice.js";
 import Navbar from "../components/navbar/Navbar.jsx";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
-  const { openAuthModal } = useSelector((state) => state.user);
-  const [currentPage, setCurrentPage] = useState("login");
+  const { openAuthModal, currentPage, userData } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSuccessSignIn = (user) => {
     dispatch(setUserData(user));
     dispatch(setOpenAuthModal(false));
-    setCurrentPage("login");
+    dispatch(setCurrentPage("login"));
   };
 
   const handleCTA = () => {
-    dispatch(setOpenAuthModal(true));
+    if (userData) {
+      navigate("/dashboard");
+    } else {
+      dispatch(setOpenAuthModal(true));
+    }
   };
 
   return (
@@ -139,20 +150,15 @@ const LandingPage = () => {
         isOpen={openAuthModal}
         onClose={() => {
           dispatch(setOpenAuthModal(false));
-          setCurrentPage("login");
+          dispatch(setCurrentPage("login"));
         }}
       >
         <div>
           {/*Pass setCurrentPage function as prop to child components to allow switching between signup/login views.In login and signup page there is "setCurrentPage" named function*/}
           {currentPage == "login" && (
-            <Login
-              setCurrentPage={setCurrentPage}
-              handleSuccessSignIn={handleSuccessSignIn}
-            />
+            <Login handleSuccessSignIn={handleSuccessSignIn} />
           )}
-          {currentPage == "signup" && (
-            <SignUp setCurrentPage={setCurrentPage} />
-          )}
+          {currentPage == "signup" && <SignUp />}
           {currentPage == "otp" && (
             <OTP handleSuccessSignIn={handleSuccessSignIn} />
           )}

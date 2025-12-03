@@ -6,8 +6,10 @@ import axios from "axios";
 import { serverUrl } from "../../App";
 import { validateEmail, validatePassword } from "../../utils/helper";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setCurrentPage } from "../../redux/userSlice";
 
-const SignUp = ({ setCurrentPage }) => {
+const SignUp = () => {
   const [fullName, setFullName] = useState("");
   const [image, setImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
@@ -17,6 +19,7 @@ const SignUp = ({ setCurrentPage }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const fileInputRef = useRef();
+  const dispatch = useDispatch();
   /* 
     - useRef creates a reference ("box") to store the hidden file input element.
     - This allows us to programmatically trigger a click on the hidden input when the upload icon/button is clicked,
@@ -263,7 +266,7 @@ const SignUp = ({ setCurrentPage }) => {
         Already have an account?{" "}
         <button
           type="button"
-          onClick={() => setCurrentPage("login")}
+          onClick={() => dispatch(setCurrentPage("login"))}
           className="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300 hover:underline cursor-pointer"
         >
           Login

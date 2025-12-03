@@ -7,6 +7,7 @@ const userSlice = createSlice({
   initialState: {
     userData: null,
     openAuthModal: false,
+    currentPage: "login",
   },
   reducers: {
     setUserData: (state, action) => {
@@ -15,10 +16,14 @@ const userSlice = createSlice({
     setOpenAuthModal: (state, action) => {
       state.openAuthModal = action.payload;
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
 });
 
-export const { setUserData, setOpenAuthModal } = userSlice.actions;
+export const { setUserData, setOpenAuthModal, setCurrentPage } =
+  userSlice.actions;
 
 // Export the reducer function to add to your Redux store
 export default userSlice.reducer;
