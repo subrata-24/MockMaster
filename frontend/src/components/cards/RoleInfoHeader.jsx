@@ -14,21 +14,19 @@ const RoleInfoHeader = ({
         <h1 className="text-4xl font-bold">{role}</h1>
       </div>
       <div className="mt-4">
-        <div className="w-[60%]">
-          <div className="flex items-center justify-between">
-            <h3 className="bg-gray-700 px-4 text-lg py-2 font-semibold rounded-full">
-              Topics to focus: {topicsToFocus}
-            </h3>
-            <h3 className="bg-gray-700 px-4 text-lg py-2 font-semibold rounded-full">
-              {experience} {experience == 1 ? "year" : "years"} of experience
-            </h3>
-            <h3 className="bg-gray-700 px-4 text-lg py-2 font-semibold rounded-full">
-              {questions.length} questions
-            </h3>
-            <h3 className="bg-gray-700 px-4 text-lg py-2 font-semibold rounded-full">
-              Date: {lastUpdated}
-            </h3>
-          </div>
+        <div className="flex items-center justify-between">
+          <h3 className="bg-gray-700 px-4 text-lg py-2 font-semibold rounded-full">
+            Topics to focus: {topicsToFocus}
+          </h3>
+          <h3 className="bg-gray-700 px-4 text-lg py-2 font-semibold rounded-full">
+            {experience} {experience == 1 ? "year" : "years"} of experience
+          </h3>
+          <h3 className="bg-gray-700 px-4 text-lg py-2 font-semibold rounded-full">
+            {questions.length} questions
+          </h3>
+          <h3 className="bg-gray-700 px-4 text-lg py-2 font-semibold rounded-full">
+            Date: {lastUpdated}
+          </h3>
         </div>
       </div>
     </div>

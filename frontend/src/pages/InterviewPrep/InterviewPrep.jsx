@@ -5,6 +5,7 @@ import { serverUrl } from "../../App";
 import Navbar from "../../components/navbar/Navbar";
 import RoleInfoHeader from "../../components/cards/RoleInfoHeader";
 import moment from "moment/moment";
+import QuestionCard from "../../components/cards/QuestionCard";
 
 const InterviewPrep = () => {
   const { id } = useParams();
@@ -55,6 +56,10 @@ const InterviewPrep = () => {
               : " "
           }
         />
+
+        {sessionData?.questions.map((question, index) => {
+          return <QuestionCard key={index} question={question} />;
+        })}
       </div>
     </div>
   );
