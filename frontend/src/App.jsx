@@ -19,7 +19,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/interview-prep" element={<InterviewPrep />} />
+          <Route path="/interview-prep/:id" element={<InterviewPrep />} />
         </Routes>
       </BrowserRouter>
 

@@ -4,6 +4,8 @@ import { serverUrl } from "../../App";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Sparkles, Target, Clock, FileText, Briefcase } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setCurrentPage, setOpenAuthModal } from "../../redux/userSlice";
 
 const CreateSession = () => {
   const [role, setRole] = useState("");
@@ -13,6 +15,7 @@ const CreateSession = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,6 +53,8 @@ const CreateSession = () => {
         navigate(`/interview-prep/${response.data.session._id}`);
       }
       toast.success("Session created successfully");
+      dispatch(setOpenAuthModal(false));
+      dispatch(setCurrentPage("login"));
       // console.log(result.data.data);
       // console.log(response.data);
     } catch (error) {
