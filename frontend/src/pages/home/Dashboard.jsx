@@ -10,6 +10,11 @@ const Dashboard = () => {
   const { openAuthModal, currentPage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  const handleAddNew = () => {
+    dispatch(setOpenAuthModal(true));
+    dispatch(setCurrentPage("add-session"));
+  };
+
   return (
     <div className="w-full min-h-screen bg-gray-900 text-gray-50">
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -19,7 +24,7 @@ const Dashboard = () => {
       <Navbar />
       <button
         className="py-2 px-4 bg-gray-700 flex items-center justify-center gap-3 font-bold rounded-full fixed bottom-10 right-10 cursor-pointer"
-        onClick={() => dispatch(setOpenAuthModal(true))}
+        onClick={handleAddNew}
       >
         <LuPlus />
         Add New

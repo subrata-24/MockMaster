@@ -5,6 +5,7 @@ export const createSession = async (req, res) => {
   try {
     const { role, experience, topicsToFocus, description, questions } =
       req.body;
+    console.log(role);
     const userId = req.userId;
     const session = await Session.create({
       user: userId,
