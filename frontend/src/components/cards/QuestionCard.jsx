@@ -3,9 +3,12 @@ import { FaChevronDown } from "react-icons/fa";
 import { LuPin, LuPinOff, LuSparkles } from "react-icons/lu";
 import AIAnswerPreview from "./AIAnswerPreview";
 
-const QuestionCard = ({ question }) => {
+const QuestionCard = ({ question, onTogglePin, isPin }) => {
   const [isExpand, setIsExpand] = useState(false);
-  const [isPin, setIsPin] = useState(false);
+
+  const handlePinToggle = () => {
+    onTogglePin();
+  };
 
   return (
     <div className="bg-gray-800/70 border border-gray-700 rounded-xl p-4 my-4 shadow-md transition-all duration-300 hover:shadow-lg">
@@ -19,12 +22,12 @@ const QuestionCard = ({ question }) => {
         <div className="flex items-center gap-3 w-[25%]">
           {/* Pin Button */}
           <button
-            onClick={() => setIsPin(!isPin)}
+            onClick={handlePinToggle}
             className={`p-2 rounded-md transition-all ${
               isPin
                 ? "text-yellow-400 bg-gray-700"
                 : "text-gray-300 hover:text-white hover:bg-gray-700"
-            }`}
+            } cursor-pointer`}
           >
             {isPin ? <LuPinOff size={18} /> : <LuPin size={18} />}
           </button>

@@ -36,12 +36,18 @@ const InterviewPrep = () => {
     try {
       const response = await axios.post(
         `${serverUrl}/api/question/${questionId}/pin`,
+        {}, //axios post, put, patch must have three parameter.(url, data, config).axios get, delete,head has two parameter only.(url, config)
         { withCredentials: true }
       );
       console.log(response);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handlePinToggle = async (questionId) => {
+    await toggleQuestionPinStatus(questionId);
+    await fetchSessionById();
   };
 
   console.log(sessionData);
@@ -70,7 +76,14 @@ const InterviewPrep = () => {
         />
 
         {sessionData?.questions.map((question, index) => {
-          return <QuestionCard key={index} question={question} />;
+          return (
+            <QuestionCard
+              key={index}
+              question={question}
+              onTogglePin={() => handlePinToggle(question._id)}
+              isPin={question.isPinned}
+            />
+          );
         })}
       </div>
     </div>
