@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { LuPin, LuPinOff, LuSparkles } from "react-icons/lu";
+import AIAnswerPreview from "./AIAnswerPreview";
 
 const QuestionCard = ({ question }) => {
   const [isExpand, setIsExpand] = useState(false);
@@ -51,7 +52,7 @@ const QuestionCard = ({ question }) => {
       {/* Expandable Answer */}
       {isExpand && (
         <p className="mt-4 text-gray-300 text-sm leading-relaxed animate-fadeIn">
-          {question.answer}
+          <AIAnswerPreview content={question.answer} />
         </p>
       )}
     </div>

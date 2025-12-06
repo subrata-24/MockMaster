@@ -32,6 +32,18 @@ const InterviewPrep = () => {
     }
   }, [id]);
 
+  const toggleQuestionPinStatus = async (questionId) => {
+    try {
+      const response = await axios.post(
+        `${serverUrl}/api/question/${questionId}/pin`,
+        { withCredentials: true }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   console.log(sessionData);
 
   return (
