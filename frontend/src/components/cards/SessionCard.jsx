@@ -7,8 +7,10 @@ import {
   LuArrowRight,
   LuTrash2,
 } from "react-icons/lu";
+import axios from "axios";
+import { serverUrl } from "../../App";
 
-const SessionCard = ({ session }) => {
+const SessionCard = ({ session, onDeleteSession }) => {
   const navigate = useNavigate();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -19,6 +21,7 @@ const SessionCard = ({ session }) => {
 
   const confirmDelete = async (e) => {
     e.stopPropagation();
+    onDeleteSession();
     setShowDeleteConfirm(false);
   };
 

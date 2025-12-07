@@ -9,6 +9,7 @@ import axios from "axios";
 import { serverUrl } from "../../App.jsx";
 import { setSessionData } from "../../redux/SessionSlice.js";
 import SessionCard from "../../components/cards/SessionCard.jsx";
+import { HandHelping } from "lucide-react";
 
 const Dashboard = () => {
   const { openAuthModal, currentPage, userData } = useSelector(
@@ -20,6 +21,21 @@ const Dashboard = () => {
   const handleAddNew = () => {
     dispatch(setOpenAuthModal(true));
     dispatch(setCurrentPage("add-session"));
+  };
+
+  const handleDeleteSession = async (sessionId) => {
+    try {
+      const response = await axios.delete(
+        `${serverUrl}/api/session/delete-session-by-id/${sessionId}`,
+        { withCredentials: true }
+      );
+      console.log(response);
+      if (response.data?.success === true) {
+        getAllSession();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getAllSession = async () => {
@@ -78,7 +94,13 @@ const Dashboard = () => {
           {sessionData && sessionData.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {sessionData.map((session) => {
-                return <SessionCard key={session._id} session={session} />;
+                return (
+                  <SessionCard
+                    key={session._id}
+                    session={session}
+                    onDeleteSession={() => handleDeleteSession(session._id)}
+                  />
+                );
               })}
             </div>
           ) : (
