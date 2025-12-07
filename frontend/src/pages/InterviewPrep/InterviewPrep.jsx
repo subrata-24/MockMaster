@@ -6,12 +6,15 @@ import Navbar from "../../components/navbar/Navbar";
 import RoleInfoHeader from "../../components/cards/RoleInfoHeader";
 import moment from "moment/moment";
 import QuestionCard from "../../components/cards/QuestionCard";
+import ExplanationCard from "../../components/cards/ExplanationCard";
 
 const InterviewPrep = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [sessionData, setSessionData] = useState(null);
+  const [isExplanation, setIsExplanation] = useState(false);
+  const [explanation, setExplanation] = useState(null);
 
   const fetchSessionById = async () => {
     try {
@@ -50,7 +53,34 @@ const InterviewPrep = () => {
     await fetchSessionById();
   };
 
-  console.log(sessionData);
+  const getExplanation = async (question) => {
+    setIsLoading(true);
+    setExplanation(null);
+    setError(null);
+    try {
+      const response = await axios.post(
+        `${serverUrl}/api/ai/question-explanation`,
+        { question },
+        { withCredentials: true }
+      );
+      setExplanation(response.data.data);
+      console.log(explanation);
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setIsExplanation(false);
+    setError(null);
+    setIsLoading(false);
+    setExplanation(null);
+  };
+
+  // console.log(sessionData);
 
   return (
     <div className="w-full min-h-screen bg-gray-900 text-gray-50">
@@ -75,16 +105,46 @@ const InterviewPrep = () => {
           }
         />
 
-        {sessionData?.questions.map((question, index) => {
-          return (
-            <QuestionCard
-              key={index}
-              question={question}
-              onTogglePin={() => handlePinToggle(question._id)}
-              isPin={question.isPinned}
-            />
-          );
-        })}
+        {!isExplanation ? (
+          <div className="w-full">
+            {(sessionData?.questions || []).map((question) => {
+              return (
+                <QuestionCard
+                  key={question._id}
+                  question={question}
+                  onTogglePin={() => handlePinToggle(question._id)}
+                  isPin={question.isPinned}
+                  onLearnMore={() => getExplanation(question)}
+                  setIsExplanation={() => setIsExplanation(true)}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex gap-4">
+            <div className="w-[60%]">
+              {(sessionData?.questions || []).map((question) => {
+                return (
+                  <QuestionCard
+                    key={question._id}
+                    question={question}
+                    onTogglePin={() => handlePinToggle(question._id)}
+                    isPin={question.isPinned}
+                    onLearnMore={() => getExplanation(question)}
+                  />
+                );
+              })}
+            </div>
+            <div className="w-[40%] ">
+              <ExplanationCard
+                onClose={handleClose}
+                explanation={explanation}
+                error={error}
+                isLoading={isLoading}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

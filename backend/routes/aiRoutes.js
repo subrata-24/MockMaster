@@ -7,4 +7,4 @@ import {
 
 export const aiRouter = express.Router();
 aiRouter.post("/question-answer", isAuth, generateInterviewsQuestion);
-aiRouter.post("/question-explanation", questionExplanation);
+aiRouter.post("/question-explanation", isAuth, questionExplanation);
