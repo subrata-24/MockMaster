@@ -14,6 +14,7 @@ import {
 } from "../redux/userSlice.js";
 import Navbar from "../components/navbar/Navbar.jsx";
 import { useNavigate } from "react-router-dom";
+import EmailVerification from "./auth/EmailVerification.jsx";
 
 const LandingPage = () => {
   const { openAuthModal, currentPage, userData } = useSelector(
@@ -162,6 +163,7 @@ const LandingPage = () => {
           {currentPage == "otp" && (
             <OTP handleSuccessSignIn={handleSuccessSignIn} />
           )}
+          {currentPage == "email" && <EmailVerification />}
         </div>
       </Modal>
     </div>

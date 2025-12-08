@@ -2,7 +2,7 @@ import User from "../models/user.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import bcrypt from "bcrypt";
 import genToken from "../utils/token.js";
-import { sendSignUpOTP } from "../utils/mailer.js";
+import { sendPasswordResetOTP, sendSignUpOTP } from "../utils/mailer.js";
 
 export const signUp = async (req, res) => {
   try {
@@ -43,7 +43,7 @@ export const signUp = async (req, res) => {
 
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     user.otp = otp;
-    user.otpExpires = Date.now() + 5 * 60 * 1000;
+    user.otpExpires = Date.now() + 2 * 60 * 1000;
     await user.save();
     await sendSignUpOTP({ to: email, otp });
 
@@ -132,9 +132,37 @@ export const login = async (req, res) => {
 
 export const signOut = async (req, res) => {
   try {
+    const user = await User.findById(req.userId);
+    if (!user)
+      return res.status(404).json({ success: false, message: "No user found" });
+    user.isOtpVerified = false;
     res.clearCookie("token");
+    await user.save();
     return res.status(200).json({ message: "Successfully log out" });
   } catch (error) {
     return res.status(500).json({ message: "Log out error" });
+  }
+};
+
+export const sendOTPtoEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(404).json({ success: false, message: "No user found" });
+
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    user.otp = otp;
+    user.otpExpires = Date.now() + 2 * 60 * 1000;
+    await user.save();
+    await sendPasswordResetOTP({ to: email, otp });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP sent successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Find error when sending otp", error });
   }
 };

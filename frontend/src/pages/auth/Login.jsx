@@ -98,6 +98,7 @@ const Login = ({ handleSuccessSignIn }) => {
               className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 pr-12 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               required
             />
+
             {/* The eye icon button must have type="button" because buttons inside <form> elements default to type="submit", which triggers form submission and page refresh. */}
             <button
               type="button"
@@ -115,6 +116,17 @@ const Login = ({ handleSuccessSignIn }) => {
             {error}
           </div>
         )}
+
+        {/* Forget Password */}
+        <div className="text-sm text-gray-400">
+          <button
+            type="button"
+            onClick={() => dispatch(setCurrentPage("email"))}
+            className="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300 hover:underline cursor-pointer"
+          >
+            Forget Password?
+          </button>
+        </div>
 
         {/* Submit Button */}
         <button

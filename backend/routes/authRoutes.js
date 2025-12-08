@@ -1,6 +1,7 @@
 import express from "express";
 import {
   login,
+  sendOTPtoEmail,
   signOut,
   signUp,
   verifySignUpOTP,
@@ -14,3 +15,4 @@ authrouter.post("/sign-up", upload.single("image"), signUp);
 authrouter.post("/verify-signup-otp", isAuth, verifySignUpOTP);
 authrouter.post("/login", login);
 authrouter.get("/sign-out", signOut);
+authrouter.post("/forget-passowrd-otp", sendOTPtoEmail);
