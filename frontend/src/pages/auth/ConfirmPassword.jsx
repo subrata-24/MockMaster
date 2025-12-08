@@ -1,0 +1,135 @@
+import axios from "axios";
+import React from "react";
+import { useState } from "react";
+import { serverUrl } from "../../App.jsx";
+import toast from "react-hot-toast";
+import { validatePassword } from "../../utils/helper.js";
+
+const ConfirmPassword = ({ handleSuccessSignIn, email }) => {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    const passVal = validatePassword(password);
+    if (passVal) {
+      setIsLoading(false);
+      setError(passVal);
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `${serverUrl}/api/auth/confirm-password`,
+        { email, password, confirmPassword },
+        { withCredentials: true }
+      );
+      toast.success(response.data?.message || "Password set successfully");
+      handleSuccessSignIn(response.data);
+    } catch (error) {
+      setError(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="w-full">
+      {/* Header */}
+      <div className="mb-6">
+        <h3 className="text-2xl font-bold text-white mb-2">New Password</h3>
+        <p className="text-sm text-gray-400">Please enter your new password</p>
+      </div>
+
+      {/* Form */}
+      <form className="space-y-5" onSubmit={handleSubmit}>
+        {/* Password Field */}
+        <div>
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
+            Password
+          </label>
+          <input
+            type="text"
+            id="password"
+            placeholder="Enter your new password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            required
+          />
+        </div>
+
+        {/* COnfirm Password Field */}
+        <div>
+          <label
+            htmlFor="conPass"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
+            Confirm Password
+          </label>
+          <input
+            type="text"
+            id="conPass"
+            placeholder="Enter Password again"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            required
+          />
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer hover:scale-105"
+        >
+          {isLoading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg
+                className="animate-spin h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Verifying Password...
+            </span>
+          ) : (
+            "Confirm Password"
+          )}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default ConfirmPassword;

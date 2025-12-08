@@ -16,6 +16,7 @@ import Navbar from "../components/navbar/Navbar.jsx";
 import { useNavigate } from "react-router-dom";
 import EmailVerification from "./auth/EmailVerification.jsx";
 import VerifyOTP from "./auth/VerifyOTP.jsx";
+import ConfirmPassword from "./auth/ConfirmPassword.jsx";
 
 const LandingPage = () => {
   const { openAuthModal, currentPage, userData } = useSelector(
@@ -41,6 +42,7 @@ const LandingPage = () => {
 
   const handleSuccesOTPVerified = (email) => {
     setEmail(email);
+    dispatch(setCurrentPage("confirm-password"));
   };
 
   const handleCTA = () => {
@@ -187,6 +189,12 @@ const LandingPage = () => {
               handleSuccesOTPVerified={handleSuccesOTPVerified}
               email={email}
               time={time}
+            />
+          )}
+          {currentPage == "confirm-password" && (
+            <ConfirmPassword
+              handleSuccessSignIn={handleSuccessSignIn}
+              email={email}
             />
           )}
         </div>

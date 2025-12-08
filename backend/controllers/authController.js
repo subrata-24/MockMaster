@@ -205,3 +205,43 @@ export const verifyForgetOTP = async (req, res) => {
       .json({ success: false, message: "Server error", error });
   }
 };
+
+export const verifyPassword = async (req, res) => {
+  try {
+    const { email, password, confirmPassword } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User is not found" });
+    }
+    if (password !== confirmPassword) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Password is not matching" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    const token = genToken(user._id);
+    res.cookie("token", token, {
+      secure: false,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    return res.status(200).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      profileImageUrl: user.profileImageUrl,
+      isEmailVerified: user.isEmailVerified,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error });
+  }
+};
