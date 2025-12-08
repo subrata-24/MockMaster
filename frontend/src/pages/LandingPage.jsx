@@ -15,11 +15,14 @@ import {
 import Navbar from "../components/navbar/Navbar.jsx";
 import { useNavigate } from "react-router-dom";
 import EmailVerification from "./auth/EmailVerification.jsx";
+import VerifyOTP from "./auth/VerifyOTP.jsx";
 
 const LandingPage = () => {
   const { openAuthModal, currentPage, userData } = useSelector(
     (state) => state.user
   );
+  const [email, setEmail] = useState("");
+  const [time, setTime] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,6 +30,13 @@ const LandingPage = () => {
     dispatch(setUserData(user));
     dispatch(setOpenAuthModal(false));
     dispatch(setCurrentPage("login"));
+  };
+
+  const handleForgetPasswordOTP = (email, time) => {
+    // console.log(email);
+    setEmail(email);
+    setTime(time);
+    dispatch(setCurrentPage("forget-otp"));
   };
 
   const handleCTA = () => {
@@ -163,7 +173,14 @@ const LandingPage = () => {
           {currentPage == "otp" && (
             <OTP handleSuccessSignIn={handleSuccessSignIn} />
           )}
-          {currentPage == "email" && <EmailVerification />}
+          {currentPage == "email" && (
+            <EmailVerification
+              handleForgetPasswordOTP={handleForgetPasswordOTP}
+            />
+          )}
+          {currentPage == "forget-otp" && (
+            <VerifyOTP email={email} time={time} />
+          )}
         </div>
       </Modal>
     </div>

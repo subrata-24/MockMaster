@@ -1,22 +1,31 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { serverUrl } from "../../App.jsx";
+import toast from "react-hot-toast";
 
-const EmailVerification = () => {
+const EmailVerification = ({ handleForgetPasswordOTP }) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     try {
       const response = await axios.post(
         `${serverUrl}/api/auth/forget-passowrd-otp`,
         { email }
       );
-      console.log(response);
+      //   console.log(response.data?.user?.expiryTime);
+      const time = response.data?.user?.expiryTime;
+      toast.success("OTP sent successfully");
+      handleForgetPasswordOTP(email, time);
     } catch (error) {
       console.log(error);
+      setError(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
   return (

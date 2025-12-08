@@ -157,9 +157,13 @@ export const sendOTPtoEmail = async (req, res) => {
     await user.save();
     await sendPasswordResetOTP({ to: email, otp });
 
-    return res
-      .status(200)
-      .json({ success: true, message: "OTP sent successfully" });
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent successfully",
+      user: {
+        expiryTime: user.otpExpires,
+      },
+    });
   } catch (error) {
     return res
       .status(500)
