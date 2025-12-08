@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { TbReload } from "react-icons/tb";
 import { serverUrl } from "../../App";
 
-const VerifyOTP = ({ email, time: initialTime }) => {
+const VerifyOTP = ({ handleSuccesOTPVerified, email, time: initialTime }) => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -40,7 +40,24 @@ const VerifyOTP = ({ email, time: initialTime }) => {
 
   const canResend = remainingMs === 0;
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        `${serverUrl}/api/auth/verify-forget-otp`,
+        { email, otp }
+      );
+      handleSuccesOTPVerified(email);
+      toast.success("OTP verified successfully");
+    } catch (error) {
+      setError(error.response?.data?.message);
+      toast.error(error.response?.data?.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleResendOtp = async (e) => {
     e.preventDefault();

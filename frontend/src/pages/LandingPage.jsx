@@ -39,6 +39,10 @@ const LandingPage = () => {
     dispatch(setCurrentPage("forget-otp"));
   };
 
+  const handleSuccesOTPVerified = (email) => {
+    setEmail(email);
+  };
+
   const handleCTA = () => {
     if (userData) {
       navigate("/dashboard");
@@ -179,7 +183,11 @@ const LandingPage = () => {
             />
           )}
           {currentPage == "forget-otp" && (
-            <VerifyOTP email={email} time={time} />
+            <VerifyOTP
+              handleSuccesOTPVerified={handleSuccesOTPVerified}
+              email={email}
+              time={time}
+            />
           )}
         </div>
       </Modal>

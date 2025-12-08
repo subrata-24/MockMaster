@@ -4,6 +4,7 @@ import {
   sendOTPtoEmail,
   signOut,
   signUp,
+  verifyForgetOTP,
   verifySignUpOTP,
 } from "../controllers/authController.js";
 import { upload } from "../middlewares/multer.js";
@@ -16,3 +17,4 @@ authrouter.post("/verify-signup-otp", isAuth, verifySignUpOTP);
 authrouter.post("/login", login);
 authrouter.get("/sign-out", signOut);
 authrouter.post("/forget-passowrd-otp", sendOTPtoEmail);
+authrouter.post("/verify-forget-otp", verifyForgetOTP);

@@ -170,3 +170,38 @@ export const sendOTPtoEmail = async (req, res) => {
       .json({ success: false, message: "Find error when sending otp", error });
   }
 };
+
+export const verifyForgetOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "User is not found" });
+    }
+    if (user.otpExpires < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP is expired.Request for new OTP",
+      });
+    }
+    if (user.otp !== otp) {
+      return res
+        .status(400)
+        .json({ success: false, message: "You entered a invalid OTP" });
+    }
+
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    user.isOtpVerified = true;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified successfully",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error });
+  }
+};
