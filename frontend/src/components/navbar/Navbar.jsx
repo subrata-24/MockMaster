@@ -5,11 +5,13 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { serverUrl } from "../../App";
 import { LuLogOut, LuUser, LuChevronDown, LuSparkles } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { userData, openAuthModal } = useSelector((state) => state.user);
   const [showInfo, setShowInfo] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogOut = async () => {
     try {
@@ -19,6 +21,7 @@ const Navbar = () => {
       toast.success(result.data.message || "Successfully logged out");
       setShowInfo(false);
       dispatch(setUserData(null));
+      navigate("/");
     } catch (error) {
       console.log(error);
       const errorMessage =

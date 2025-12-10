@@ -18,7 +18,9 @@ const useGetCurrentUser = () => {
           }
         );
         console.log(result.data);
-        dispatch(setUserData(result.data));
+        if (result.data?.isEmailVerified) {
+          dispatch(setUserData(result.data));
+        }
       } catch (error) {
         console.log(`Find error when trying to get the current user ${error}`);
       }

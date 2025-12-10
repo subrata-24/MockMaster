@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { TbReload } from "react-icons/tb";
+import { LuShieldCheck, LuRotateCw, LuClock } from "react-icons/lu";
 import { serverUrl } from "../../App";
 
 const VerifyOTP = ({ handleSuccesOTPVerified, email, time: initialTime }) => {
@@ -12,8 +12,6 @@ const VerifyOTP = ({ handleSuccesOTPVerified, email, time: initialTime }) => {
   const [remainingMs, setRemainingMs] = useState(0);
   const [expiryTime, setExpiryTIme] = useState(initialTime);
 
-  console.log("time =", expiryTime, "type =", typeof expiryTime);
-
   useEffect(() => {
     if (!expiryTime) {
       setRemainingMs(0);
@@ -21,11 +19,10 @@ const VerifyOTP = ({ handleSuccesOTPVerified, email, time: initialTime }) => {
     }
     const update = () => {
       const diff = Math.max(0, new Date(expiryTime).getTime() - Date.now());
-      //time is in ISO formate
       setRemainingMs(diff);
     };
     update();
-    const id = setInterval(update, 500); //For update the remainings time after every 500ms.After every 500 the useEffect is run than reset the remaining time and the page/component
+    const id = setInterval(update, 500);
     return () => clearInterval(id);
   }, [expiryTime]);
 
@@ -68,7 +65,6 @@ const VerifyOTP = ({ handleSuccesOTPVerified, email, time: initialTime }) => {
         `${serverUrl}/api/auth/forget-passowrd-otp`,
         { email }
       );
-      //   console.log(response.data?.user?., setExpiryTIme) =;
       const time = response.data?.user?.expiryTime;
       setExpiryTIme(time);
       toast.success("OTP sent again");
@@ -83,74 +79,102 @@ const VerifyOTP = ({ handleSuccesOTPVerified, email, time: initialTime }) => {
 
   return (
     <div className="w-full">
-      {/* Header */}
-      <div className="mb-6">
-        <h3 className="text-2xl font-bold text-white mb-2">OTP Verification</h3>
-        <p className="text-sm text-gray-400">
-          Please enter the OTP sent to your email
+      {/* Header with Icon */}
+      <div className="mb-8 text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 mb-4">
+          <LuShieldCheck className="text-cyan-400" size={32} />
+        </div>
+        <h3 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+          OTP Verification
+        </h3>
+        <p className="text-sm text-slate-400">
+          Enter the 6-digit code sent to{" "}
+          <span className="text-cyan-400 font-semibold">{email}</span>
         </p>
       </div>
 
       {/* Form */}
-      <form className="space-y-5" onSubmit={handleSubmit}>
+      <form className="space-y-6" onSubmit={handleSubmit}>
         {/* OTP Field */}
         <div>
           <label
             htmlFor="otp"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-semibold text-slate-300 mb-2"
           >
-            otp
+            Verification Code
           </label>
           <input
             type="text"
             id="otp"
-            placeholder="Enter your otp"
+            placeholder="000000"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            maxLength={6}
+            className="w-full bg-slate-800/50 text-slate-100 text-center text-2xl font-bold tracking-[0.5em] border border-slate-700/50 rounded-xl px-4 py-4 placeholder:text-slate-600 placeholder:tracking-normal placeholder:text-base placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
             required
           />
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg text-sm">
-            {error}
+          <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm backdrop-blur-sm">
+            <svg
+              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>{error}</span>
           </div>
         )}
 
-        {/* Resend/Timer */}
-        <div className="flex items-center gap-3">
+        {/* Timer and Resend Section */}
+        <div className="flex items-center justify-between p-4 bg-slate-800/30 border border-slate-700/30 rounded-xl">
+          {!canResend ? (
+            <div className="flex items-center gap-2 text-slate-400">
+              <LuClock size={18} className="text-cyan-400" />
+              <span className="text-sm">
+                Resend available in{" "}
+                <span className="font-bold text-cyan-400">
+                  {formatMs(remainingMs)}
+                </span>
+              </span>
+            </div>
+          ) : (
+            <span className="text-sm text-slate-400">Didn't receive code?</span>
+          )}
+
           <button
             type="button"
             onClick={handleResendOtp}
             disabled={!canResend || isResending}
-            className={`inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
               canResend
-                ? "bg-gray-800 hover:bg-gray-700 text-white"
-                : "bg-gray-600 text-gray-300 cursor-not-allowed"
+                ? "bg-gradient-to-r from-cyan-600/20 to-blue-600/20 hover:from-cyan-600/30 hover:to-blue-600/30 text-cyan-400 border border-cyan-500/30 hover:border-cyan-500/50 cursor-pointer hover:scale-105"
+                : "bg-slate-700/30 text-slate-500 border border-slate-700/30 cursor-not-allowed opacity-50"
             }`}
           >
-            <TbReload className={isResending ? "animate-spin" : ""} />
-            {isResending ? "Resending..." : canResend ? "Get Code" : "Resend"}
+            <LuRotateCw
+              size={16}
+              className={isResending ? "animate-spin" : ""}
+            />
+            {isResending ? "Resending..." : "Resend Code"}
           </button>
-
-          {!canResend && (
-            <div className="text-sm text-gray-400">
-              Try again in{" "}
-              <strong className="text-white">{formatMs(remainingMs)}</strong>
-            </div>
-          )}
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer hover:scale-105"
+          className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-700 disabled:to-slate-700 text-white font-semibold py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:shadow-cyan-500/30 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none"
         >
           {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
+            <span className="flex items-center justify-center gap-3">
               <svg
                 className="animate-spin h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -171,10 +195,13 @@ const VerifyOTP = ({ handleSuccesOTPVerified, email, time: initialTime }) => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Verifying OTP...
+              <span>Verifying...</span>
             </span>
           ) : (
-            "Verify OTP"
+            <span className="flex items-center justify-center gap-2">
+              <LuShieldCheck size={18} />
+              <span>Verify Code</span>
+            </span>
           )}
         </button>
       </form>

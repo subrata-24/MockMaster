@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setCurrentPage } from "../../redux/userSlice";
 
-const SignUp = () => {
+const SignUp = ({ handleSuccessSignUp }) => {
   const [fullName, setFullName] = useState("");
   const [image, setImage] = useState(null);
   const [backendImage, setBackendImage] = useState(null);
@@ -62,14 +62,15 @@ const SignUp = () => {
         { withCredentials: true }
       );
 
+      handleSuccessSignUp(result?.data?.otpExpires);
+
       toast.success("OTP send to your email");
-      setCurrentPage("otp");
-      setIsLoading(false);
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "SignUp failed. Please try again.";
       toast.error(errorMessage);
       console.log(error);
+    } finally {
       setIsLoading(false);
     }
   };

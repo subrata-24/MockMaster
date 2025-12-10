@@ -40,6 +40,11 @@ const LandingPage = () => {
     dispatch(setCurrentPage("forget-otp"));
   };
 
+  const handleSuccessSignUp = (time) => {
+    setTime(time);
+    dispatch(setCurrentPage("otp"));
+  };
+
   const handleSuccesOTPVerified = (email) => {
     setEmail(email);
     dispatch(setCurrentPage("confirm-password"));
@@ -175,9 +180,11 @@ const LandingPage = () => {
           {currentPage == "login" && (
             <Login handleSuccessSignIn={handleSuccessSignIn} />
           )}
-          {currentPage == "signup" && <SignUp />}
+          {currentPage == "signup" && (
+            <SignUp handleSuccessSignUp={handleSuccessSignUp} />
+          )}
           {currentPage == "otp" && (
-            <OTP handleSuccessSignIn={handleSuccessSignIn} />
+            <OTP handleSuccessSignIn={handleSuccessSignIn} time={time} />
           )}
           {currentPage == "email" && (
             <EmailVerification

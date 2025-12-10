@@ -1,18 +1,22 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { serverUrl } from "../../App";
 import toast from "react-hot-toast";
+import { LuClock, LuRotateCw } from "react-icons/lu";
 
-const OTP = ({ handleSuccessSignIn }) => {
+const OTP = ({ handleSuccessSignIn, time: initialTime }) => {
   const [otp, setOtp] = useState("");
   const [showError, setShowError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [remainingMs, setRemainingMs] = useState(0);
+  const [expiryTime, setExpiryTime] = useState(initialTime);
+  const [isResending, setIsResending] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     setShowError(null);
+
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/verify-signup-otp`,
@@ -22,19 +26,61 @@ const OTP = ({ handleSuccessSignIn }) => {
       if (result.status == 200) {
         handleSuccessSignIn(result.data.user);
       }
-      setIsLoading(false);
-      toast.success(result.data.message || "OTP verified successfully");
+      toast.success("User Created successfully");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
         "OTP verification failed. Please try again.";
       toast.error(errorMessage);
-      if (error.response && error.response.data && error.response.data.error)
-        setShowError(error.response.data.error);
-      else {
-        setShowError("Something went wrong.Please try again later");
-      }
+      setShowError(
+        errorMessage || "Something went wrong.Please try again later"
+      );
+    } finally {
       setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!expiryTime) {
+      setRemainingMs(0);
+      return;
+    }
+    const update = () => {
+      const diff = Math.max(0, new Date(expiryTime).getTime() - Date.now());
+      setRemainingMs(diff);
+    };
+    update();
+    const id = setInterval(update, 500);
+    return () => clearInterval(id);
+  }, [expiryTime]);
+
+  const formatMs = (ms) => {
+    const totalSec = Math.ceil(ms / 1000);
+    const minutes = Math.floor(totalSec / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (totalSec % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  };
+
+  const canResend = remainingMs === 0;
+
+  const handleResendOtp = async () => {
+    setShowError(null);
+    setIsResending(true);
+    try {
+      const response = await axios.post(
+        `${serverUrl}/api/auth/resend-sign-up-otp`,
+        {},
+        { withCredentials: true }
+      );
+      console.log(response?.data?.otpExpires);
+      setExpiryTime(response?.data?.otpExpires);
+    } catch (error) {
+      console.log(error);
+      setShowError(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -70,6 +116,40 @@ const OTP = ({ handleSuccessSignIn }) => {
             {showError}
           </div>
         )}
+
+        {/* Timer and Resend Section */}
+        <div className="flex items-center justify-between p-4 bg-slate-800/30 border border-slate-700/30 rounded-xl">
+          {!canResend ? (
+            <div className="flex items-center gap-2 text-slate-400">
+              <LuClock size={18} className="text-cyan-400" />
+              <span className="text-sm">
+                Resend available in{" "}
+                <span className="font-bold text-cyan-400">
+                  {formatMs(remainingMs)}
+                </span>
+              </span>
+            </div>
+          ) : (
+            <span className="text-sm text-slate-400">Didn't receive code?</span>
+          )}
+
+          <button
+            type="button"
+            onClick={handleResendOtp}
+            disabled={!canResend || isResending}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+              canResend
+                ? "bg-gradient-to-r from-cyan-600/20 to-blue-600/20 hover:from-cyan-600/30 hover:to-blue-600/30 text-cyan-400 border border-cyan-500/30 hover:border-cyan-500/50 cursor-pointer hover:scale-105"
+                : "bg-slate-700/30 text-slate-500 border border-slate-700/30 cursor-not-allowed opacity-50"
+            }`}
+          >
+            <LuRotateCw
+              size={16}
+              className={isResending ? "animate-spin" : ""}
+            />
+            {isResending ? "Resending..." : "Resend Code"}
+          </button>
+        </div>
 
         <button
           type="submit"

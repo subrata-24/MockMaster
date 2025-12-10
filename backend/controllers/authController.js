@@ -53,6 +53,28 @@ export const signUp = async (req, res) => {
   }
 };
 
+export const resendSignUpOTP = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ success: false, message: "No user exist" });
+    }
+
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    user.otp = otp;
+    user.otpExpires = Date.now() + 2 * 60 * 1000;
+    await user.save();
+    await sendSignUpOTP({ to: user.email, otp });
+
+    return res.status(201).json(user);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error });
+  }
+};
+
 export const verifySignUpOTP = async (req, res) => {
   try {
     const { otp } = req.body;
