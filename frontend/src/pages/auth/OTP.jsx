@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { serverUrl } from "../../App";
 import toast from "react-hot-toast";
-import { LuClock, LuRotateCw } from "react-icons/lu";
+import { LuShieldCheck, LuRotateCw, LuClock } from "react-icons/lu";
 
 const OTP = ({ handleSuccessSignIn, time: initialTime }) => {
   const [otp, setOtp] = useState("");
@@ -76,9 +76,11 @@ const OTP = ({ handleSuccessSignIn, time: initialTime }) => {
       );
       console.log(response?.data?.otpExpires);
       setExpiryTime(response?.data?.otpExpires);
+      toast.success("OTP sent again");
     } catch (error) {
       console.log(error);
       setShowError(error?.response?.data?.message || "Something went wrong");
+      toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
       setIsResending(false);
     }
@@ -86,34 +88,55 @@ const OTP = ({ handleSuccessSignIn, time: initialTime }) => {
 
   return (
     <div className="w-full">
-      <div className="mb-6">
-        <h3 className="text-2xl font-bold text-white mb-2">Verify OTP</h3>
-        <p className="text-sm text-gray-400">
-          Check your email and verify your OTP
+      {/* Header with Icon */}
+      <div className="mb-8 text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 mb-4">
+          <LuShieldCheck className="text-cyan-400" size={32} />
+        </div>
+        <h3 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+          Verify Your Email
+        </h3>
+        <p className="text-sm text-slate-400">
+          Enter the verification code sent to your email
         </p>
       </div>
+
       <form className="space-y-6" onSubmit={handleSubmit}>
+        {/* OTP Input */}
         <div>
           <label
             htmlFor="otp"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-semibold text-slate-300 mb-2"
           >
-            Type OTP
+            Verification Code
           </label>
           <input
             type="text"
             id="otp"
-            placeholder="Enter verification OTP"
+            placeholder="000000"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+            maxLength={6}
+            className="w-full bg-slate-800/50 text-slate-100 text-center text-2xl font-bold tracking-[0.5em] border border-slate-700/50 rounded-xl px-4 py-4 placeholder:text-slate-600 placeholder:tracking-normal placeholder:text-base placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
             required
           />
         </div>
 
+        {/* Error Message */}
         {showError && (
-          <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg text-sm">
-            {showError}
+          <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm backdrop-blur-sm">
+            <svg
+              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>{showError}</span>
           </div>
         )}
 
@@ -151,13 +174,14 @@ const OTP = ({ handleSuccessSignIn, time: initialTime }) => {
           </button>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer hover:scale-105"
+          className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-700 disabled:to-slate-700 text-white font-semibold py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:shadow-cyan-500/30 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none"
         >
           {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
+            <span className="flex items-center justify-center gap-3">
               <svg
                 className="animate-spin h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -178,10 +202,13 @@ const OTP = ({ handleSuccessSignIn, time: initialTime }) => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Verifying...
+              <span>Verifying...</span>
             </span>
           ) : (
-            "Submit OTP"
+            <span className="flex items-center justify-center gap-2">
+              <LuShieldCheck size={18} />
+              <span>Verify & Continue</span>
+            </span>
           )}
         </button>
       </form>

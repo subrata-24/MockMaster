@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa6";
+import { LuEye, LuEyeOff, LuMail, LuLock, LuLogIn } from "react-icons/lu";
 import axios from "axios";
 import { serverUrl } from "../../App";
 import toast from "react-hot-toast";
@@ -15,7 +14,6 @@ const Login = ({ handleSuccessSignIn }) => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
 
-  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -44,18 +42,22 @@ const Login = ({ handleSuccessSignIn }) => {
     }
   };
 
-  // Handle show password
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   return (
     <div className="w-full">
-      {/* Header */}
-      <div className="mb-6">
-        <h3 className="text-2xl font-bold text-white mb-2">Welcome back</h3>
-        <p className="text-sm text-gray-400">
-          Please enter your details to log in
+      {/* Header with Icon */}
+      <div className="mb-8 text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 mb-4">
+          <LuLogIn className="text-cyan-400" size={32} />
+        </div>
+        <h3 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+          Welcome Back
+        </h3>
+        <p className="text-sm text-slate-400">
+          Login to continue your interview preparation
         </p>
       </div>
 
@@ -65,66 +67,83 @@ const Login = ({ handleSuccessSignIn }) => {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-semibold text-slate-300 mb-2"
           >
             Email Address
           </label>
-          <input
-            type="email"
-            id="email"
-            placeholder="Enter your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-            required
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <LuMail className="text-slate-500" size={20} />
+            </div>
+            <input
+              type="email"
+              id="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-slate-800/50 text-slate-100 border border-slate-700/50 rounded-xl pl-12 pr-4 py-3.5 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
+              required
+            />
+          </div>
         </div>
 
         {/* Password Field */}
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-semibold text-slate-300 mb-2"
           >
             Password
           </label>
           <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <LuLock className="text-slate-500" size={20} />
+            </div>
             <input
               type={showPassword ? "text" : "password"}
               id="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 pr-12 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              className="w-full bg-slate-800/50 text-slate-100 border border-slate-700/50 rounded-xl pl-12 pr-12 py-3.5 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
               required
             />
-
-            {/* The eye icon button must have type="button" because buttons inside <form> elements default to type="submit", which triggers form submission and page refresh. */}
             <button
               type="button"
               onClick={handleShowPassword}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-300"
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
             >
-              {showPassword ? <FaEye size={20} /> : <FaEyeSlash size={20} />}
+              {showPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
             </button>
           </div>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg text-sm">
-            {error}
+          <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm backdrop-blur-sm">
+            <svg
+              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>{error}</span>
           </div>
         )}
 
-        {/* Forget Password */}
-        <div className="text-sm text-gray-400">
+        {/* Forget Password Link */}
+        <div className="text-right">
           <button
             type="button"
             onClick={() => dispatch(setCurrentPage("email"))}
-            className="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300 hover:underline cursor-pointer"
+            className="text-sm text-cyan-400 hover:text-cyan-300 font-semibold transition-colors duration-300 hover:underline cursor-pointer"
           >
-            Forget Password?
+            Forgot Password?
           </button>
         </div>
 
@@ -132,10 +151,10 @@ const Login = ({ handleSuccessSignIn }) => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 cursor-pointer hover:scale-105"
+          className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-700 disabled:to-slate-700 text-white font-semibold py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:shadow-cyan-500/30 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none"
         >
           {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
+            <span className="flex items-center justify-center gap-3">
               <svg
                 className="animate-spin h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -156,24 +175,29 @@ const Login = ({ handleSuccessSignIn }) => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Verifying...
+              <span>Logging In...</span>
             </span>
           ) : (
-            "Log In"
+            <span className="flex items-center justify-center gap-2">
+              <LuLogIn size={18} />
+              <span>Login</span>
+            </span>
           )}
         </button>
       </form>
 
       {/* Sign Up Link */}
-      <div className="mt-6 text-center text-sm text-gray-400">
-        Don't have an account?{" "}
-        <button
-          type="button"
-          onClick={() => dispatch(setCurrentPage("signup"))}
-          className="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300 hover:underline cursor-pointer"
-        >
-          Sign Up
-        </button>
+      <div className="mt-6 text-center">
+        <p className="text-sm text-slate-400">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            onClick={() => dispatch(setCurrentPage("signup"))}
+            className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors duration-300 hover:underline cursor-pointer"
+          >
+            Sign Up
+          </button>
+        </p>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ const QuestionCard = ({
   };
 
   const handleLearnMore = () => {
-    onLearnMore();
+    onLearnMore(question.question);
     setIsExplanation();
   };
 

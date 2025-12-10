@@ -7,6 +7,7 @@ import RoleInfoHeader from "../../components/cards/RoleInfoHeader";
 import moment from "moment/moment";
 import QuestionCard from "../../components/cards/QuestionCard";
 import ExplanationCard from "../../components/cards/ExplanationCard";
+import { LuCircle, LuListCollapse } from "react-icons/lu";
 
 const InterviewPrep = () => {
   const { id } = useParams();
@@ -15,6 +16,7 @@ const InterviewPrep = () => {
   const [sessionData, setSessionData] = useState(null);
   const [isExplanation, setIsExplanation] = useState(false);
   const [explanation, setExplanation] = useState(null);
+  const [questionLoading, setQuestionLoading] = useState(false);
 
   const fetchSessionById = async () => {
     try {
@@ -27,6 +29,7 @@ const InterviewPrep = () => {
       console.log(error);
     }
   };
+  console.log(sessionData);
 
   useEffect(() => {
     if (id) {
@@ -53,6 +56,7 @@ const InterviewPrep = () => {
   };
 
   const getExplanation = async (question) => {
+    console.log(question);
     setIsLoading(true);
     setExplanation(null);
     setError(null);
@@ -63,11 +67,47 @@ const InterviewPrep = () => {
         { withCredentials: true }
       );
       setExplanation(response.data.data);
+      console.log(question);
       console.log(explanation);
     } catch (error) {
       setError(error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleAddQuestion = async (e) => {
+    e.preventDefault();
+    setQuestionLoading(true);
+    try {
+      const response = await axios.post(
+        `${serverUrl}/api/ai/question-answer`,
+        {
+          role: sessionData.role,
+          experience: sessionData.experience,
+          topicsToFocus: sessionData.topicsToFocus,
+          numberOfQuestions: 10,
+        },
+        { withCredentials: true }
+      );
+      const question = response?.data?.data;
+
+      const result = await axios.post(
+        `${serverUrl}/api/question/add-question`,
+        {
+          sessionId: sessionData._id,
+          questions: question,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      fetchSessionById();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setQuestionLoading(false);
     }
   };
 
@@ -120,12 +160,29 @@ const InterviewPrep = () => {
                       question={question}
                       onTogglePin={() => handlePinToggle(question._id)}
                       isPin={question.isPinned}
-                      onLearnMore={() => getExplanation(question)}
+                      onLearnMore={getExplanation}
                       setIsExplanation={() => setIsExplanation(true)}
                     />
                   );
                 })}
               </div>
+              <button
+                disabled={questionLoading}
+                className="mt-4 ml-auto flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-full shadow-2xl shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-110 cursor-pointer z-50"
+                onClick={handleAddQuestion}
+              >
+                {questionLoading ? (
+                  <>
+                    <LuCircle size={24} className="animate-spin" />
+                    <span className="hidden sm:inline">Adding...</span>
+                  </>
+                ) : (
+                  <>
+                    <LuListCollapse size={24} />
+                    <span className="hidden sm:inline">Add new question</span>
+                  </>
+                )}
+              </button>
             </div>
           ) : (
             <div className="flex flex-col lg:flex-row gap-6 mt-8">
@@ -138,11 +195,29 @@ const InterviewPrep = () => {
                         question={question}
                         onTogglePin={() => handlePinToggle(question._id)}
                         isPin={question.isPinned}
-                        onLearnMore={() => getExplanation(question)}
+                        onLearnMore={getExplanation}
+                        setIsExplanation={() => setIsExplanation(true)}
                       />
                     );
                   })}
                 </div>
+                <button
+                  disabled={questionLoading}
+                  className="mt-4 ml-auto flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-full shadow-2xl shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-110 cursor-pointer z-50"
+                  onClick={handleAddQuestion}
+                >
+                  {questionLoading ? (
+                    <>
+                      <LuCircle size={24} className="animate-spin" />
+                      <span className="hidden sm:inline">Adding...</span>
+                    </>
+                  ) : (
+                    <>
+                      <LuListCollapse size={24} />
+                      <span className="hidden sm:inline">Add new question</span>
+                    </>
+                  )}
+                </button>
               </div>
               <div className="w-full lg:w-[42%] lg:sticky lg:top-6 lg:self-start">
                 <ExplanationCard

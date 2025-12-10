@@ -29,7 +29,7 @@ export const addQuestions = async (req, res) => {
     //Insert new question to the session
     session.questions.push(...questionDocs.map((q) => q._id));
     await session.save();
-    return res.status(200).json({ success: true, questionDocs });
+    return res.status(200).json({ success: true, session });
   } catch (error) {
     console.log("Find error to adding question", error);
     return res
