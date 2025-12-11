@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import image from "../assets/image.png";
+import image from "../assets/landing.png";
 import { APP_FEATURES } from "../utils/data.js";
 import { LuSparkles } from "react-icons/lu";
 import Login from "./auth/Login.jsx";
@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import EmailVerification from "./auth/EmailVerification.jsx";
 import VerifyOTP from "./auth/VerifyOTP.jsx";
 import ConfirmPassword from "./auth/ConfirmPassword.jsx";
+import Footer from "../components/Footer.jsx";
 
 const LandingPage = () => {
   const { openAuthModal, currentPage, userData } = useSelector(
@@ -206,6 +207,7 @@ const LandingPage = () => {
           )}
         </div>
       </Modal>
+      <Footer />
     </div>
   );
 };

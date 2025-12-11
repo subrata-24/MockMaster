@@ -8,6 +8,7 @@ import moment from "moment/moment";
 import QuestionCard from "../../components/cards/QuestionCard";
 import ExplanationCard from "../../components/cards/ExplanationCard";
 import { LuCircle, LuListCollapse } from "react-icons/lu";
+import Footer from "../../components/Footer.jsx";
 
 const InterviewPrep = () => {
   const { id } = useParams();
@@ -231,6 +232,7 @@ const InterviewPrep = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

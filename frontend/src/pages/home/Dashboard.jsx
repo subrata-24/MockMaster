@@ -10,6 +10,7 @@ import { serverUrl } from "../../App.jsx";
 import { setSessionData } from "../../redux/SessionSlice.js";
 import SessionCard from "../../components/cards/SessionCard.jsx";
 import { HandHelping } from "lucide-react";
+import Footer from "../../components/Footer.jsx";
 
 const Dashboard = () => {
   const { openAuthModal, currentPage, userData } = useSelector(
@@ -169,6 +170,7 @@ const Dashboard = () => {
           <div>{currentPage == "add-session" && <CreateSession />}</div>
         </Modal>
       </div>
+      <Footer />
     </div>
   );
 };
