@@ -133,23 +133,23 @@ All screenshots are stored in `mockmaster/frontend/public`.
 
 ### Landing Page
 
-![Landing Page](./public/landing.png)
+![Landing Page](frontend/public/landing.png)
 
 ### Create Account
 
-![Create Account](./public/createAccount.png)
+![Create Account](frontend/public/createAccount.png)
 
 ### Dashboard
 
-![Dashboard](./public/dashboard.png)
+![Dashboard](frontend/public/dashboard.png)
 
 ### Create Session
 
-![Create Session](./public/createSession.png)
+![Create Session](frontend/public/createSession.png)
 
 ### Interview Preparation View
 
-![Interview Prep](./public/interviewprep.png)
+![Interview Prep](frontend/public/interviewprep.png)
 
 ---
 
@@ -157,61 +157,79 @@ All screenshots are stored in `mockmaster/frontend/public`.
 
 ### Prerequisites
 
-- Node.js (LTS recommended)
-- npm or yarn
-- MongoDB instance (local or hosted)
-- Cloudinary account
-- Gmail account + App Password
-- Google Gemini API key
+- **Node.js** (LTS recommended)
+- **npm or yarn**
+- **MongoDB instance** (local or hosted)
+- **Cloudinary account**
+- **Gmail account + App Password**
+- **Google Gemini API key**
 
 ### Environment Variables
 
 Create a `.env` file in your backend root with:
 Server
-`PORT=5000
+```bash
+PORT=5000
 MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET_KEY=your_jwt_secret_key`
+JWT_SECRET_KEY=your_jwt_secret_key
+```
 
 Google Gemini
-`GEMINI_API_KEY=your_gemini_api_key`
+```bash
+GEMINI_API_KEY=your_gemini_api_key
+```
 
 Cloudinary
-`CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+```bash
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret`
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+```
 
 Email (Gmail)
-`EMAIL=your_gmail_address
-APP_PASSWORD=your_gmail_app_password`
+```bash
+EMAIL=your_gmail_address
+APP_PASSWORD=your_gmail_app_password
+```
 
 For the frontend, configure the API base URL (In `App.jsx`):
-export const serverUrl = "http://localhost:5000"; // or your deployed API URL
-Ensure CORS is configured on the backend to allow credentials from your frontend origin.
+`export const serverUrl = "http://localhost:5000"; // or your deployed API URL
+Ensure CORS is configured on the backend to allow credentials from your frontend origin.`
 
 ### Installation
 
 Clone the repository and install dependencies for both frontend and backend.
 Clone
-`git clone https://github.com/subrata-24/mockmaster.git
-cd mockmaster`
+```bash
+git clone https://github.com/subrata-24/mockmaster.git
+cd mockmaster
+```
 
 Backend
-`cd backend
-npm install`
+```bash
+cd backend
+npm install
+```
 
 Frontend
-`cd ../frontend
-npm install`
+```bash
+cd ../frontend
+npm install
+```
 
 ### Running the App
 
 In two separate terminals:
 
 Backend (from /backend)
-`npm run dev # or npm start`
+```bash
+npm run dev # or npm start
+```
 
 Frontend (from /frontend)
-`npm run dev`
+```bash
+npm run dev
+```
 
 Visit:
 
@@ -391,4 +409,5 @@ Visit:
 
 This project is currently closed-source/personal.  
 ---
+
 
