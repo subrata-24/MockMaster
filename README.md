@@ -168,21 +168,21 @@ All screenshots are stored in `mockmaster/frontend/public`.
 
 Create a `.env` file in your backend root with:
 Server
-PORT=5000
+`PORT=5000
 MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET_KEY=your_jwt_secret_key
+JWT_SECRET_KEY=your_jwt_secret_key`
 
 Google Gemini
-GEMINI_API_KEY=your_gemini_api_key
+`GEMINI_API_KEY=your_gemini_api_key`
 
 Cloudinary
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+`CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret`
 
 Email (Gmail)
-EMAIL=your_gmail_address
-APP_PASSWORD=your_gmail_app_password
+`EMAIL=your_gmail_address
+APP_PASSWORD=your_gmail_app_password`
 
 For the frontend, configure the API base URL (In `App.jsx`):
 export const serverUrl = "http://localhost:5000"; // or your deployed API URL
@@ -192,26 +192,26 @@ Ensure CORS is configured on the backend to allow credentials from your frontend
 
 Clone the repository and install dependencies for both frontend and backend.
 Clone
-git clone https://github.com/subrata-24/mockmaster.git
-cd mockmaster
+`git clone https://github.com/subrata-24/mockmaster.git
+cd mockmaster`
 
 Backend
-cd backend
-npm install
+`cd backend
+npm install`
 
 Frontend
-cd ../frontend
-npm install
+`cd ../frontend
+npm install`
 
 ### Running the App
 
 In two separate terminals:
 
 Backend (from /backend)
-npm run dev # or npm start
+`npm run dev # or npm start`
 
 Frontend (from /frontend)
-npm run dev # Vite/React dev server
+`npm run dev`
 
 Visit:
 
@@ -356,76 +356,6 @@ Visit:
 
 ---
 
-## Project Structure
-
-Example high-level structure (simplified):
-
-mockmaster/
-├─ backend/
-│ ├─ controllers/
-│ │ ├─ authController.js
-│ │ ├─ aiController.js
-│ │ ├─ sessionController.js
-│ │ ├─ questionController.js
-│ │ └─ userController.js
-│ ├─ models/
-│ │ ├─ user.js
-│ │ ├─ session.js
-│ │ └─ question.js
-│ ├─ middleware/
-│ │ └─ isAuth.js
-│ ├─ utils/
-│ │ ├─ cloudinary.js
-│ │ ├─ mailer.js
-│ │ ├─ prompt.js
-│ │ └─ token.js
-│ └─ index.js / app.js (Express setup)
-│
-├─ frontend/
-│ ├─ src/
-│ │ ├─ redux/
-│ │ │ ├─ store.js
-│ │ │ ├─ userSlice.js
-│ │ │ └─ sessionSlice.js
-│ │ ├─ hooks/
-│ │ │ └─ useGetCurrentUser.js
-│ │ ├─ components/
-│ │ │ ├─ navbar/
-│ │ │ │ └─ Navbar.jsx
-│ │ │ ├─ cards/
-│ │ │ │ ├─ SessionCard.jsx
-│ │ │ │ └─ RoleInfoHeader.jsx
-│ │ │ ├─ inputs/
-│ │ │ │ └─ CreateSession.jsx
-│ │ │ ├─ loader/
-│ │ │ │ └─ Modal.jsx
-│ │ │ └─ AI/
-│ │ │ ├─ QuestionCard.jsx
-│ │ │ ├─ ExplanationCard.jsx
-│ │ │ └─ AIAnswerPreview.jsx
-│ │ ├─ pages/
-│ │ │ ├─ LandingPage.jsx
-│ │ │ ├─ Dashboard.jsx
-│ │ │ └─ InterviewPrep.jsx
-│ │ ├─ pages/auth/
-│ │ │ ├─ Login.jsx
-│ │ │ ├─ SignUp.jsx
-│ │ │ ├─ OTP.jsx
-│ │ │ ├─ EmailVerification.jsx
-│ │ │ ├─ VerifyOTP.jsx
-│ │ │ └─ ConfirmPassword.jsx
-│ │ ├─ utils/
-│ │ │ └─ helper.js (validateEmail, validatePassword, etc.)
-│ │ └─ App.jsx
-│ └─ public/
-│ ├─ landing.png
-│ ├─ createAccount.png
-│ ├─ dashboard.png
-│ ├─ createSession.png
-│ └─ interviewprep.png
-└─ README.md
----
-
 ## Security & Best Practices
 
 - **Password Hashing**
@@ -461,3 +391,4 @@ mockmaster/
 
 This project is currently closed-source/personal.  
 ---
+
