@@ -4,7 +4,7 @@ import { LuPlus, LuRocket, LuSparkles } from "react-icons/lu";
 import Modal from "../../components/loader/Modal.jsx";
 import { setCurrentPage, setOpenAuthModal } from "../../redux/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import CreateSession from "../../components/inputs/createSession.jsx";
+import CreateSession from "../../components/inputs/CreateSession.jsx";
 import axios from "axios";
 import { serverUrl } from "../../App.jsx";
 import { setSessionData } from "../../redux/SessionSlice.js";
