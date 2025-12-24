@@ -1,5 +1,5 @@
-import Question from "../models/question.js";
-import Session from "../models/session.js";
+import Question from "../models/Question.js";
+import Session from "../models/Session.js";
 
 export const addQuestions = async (req, res) => {
   try {
