@@ -33,9 +33,9 @@ export const signUp = async (req, res) => {
     //When call res.cookie(), the server sends a Set-Cookie header in the HTTP response, and the browser automatically stores this data in cookie.
     res.cookie("token", token, {
       // secure: false - Cookie can be sent over HTTP (not just HTTPS).Set to true in production to ensure cookie is only sent over HTTPS for security
-      secure: false,
+      secure: true,
       // sameSite: "strict" - Prevents CSRF (Cross-Site Request Forgery) attacks.The cookie will only be sent with requests from the same site.Options: "strict" (most secure), "lax" (default), "none" (least secure, requires secure: true)
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       // httpOnly: true - The cookie cannot be accessed via JavaScript (document.cookie).This protects against XSS (Cross-Site Scripting) attacks.Only the server can read this cookie, making it more secure
       httpOnly: true,
@@ -135,8 +135,8 @@ export const login = async (req, res) => {
 
     const token = genToken(user._id);
     res.cookie("token", token, {
-      secure: false,
-      sameSite: "strict",
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
@@ -249,8 +249,8 @@ export const verifyPassword = async (req, res) => {
 
     const token = genToken(user._id);
     res.cookie("token", token, {
-      secure: false,
-      sameSite: "strict",
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
