@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateSession from "../../components/inputs/CreateSession.jsx";
 import axios from "axios";
 import { serverUrl } from "../../App.jsx";
-import { setSessionData } from "../../redux/SessionSlice.js";
+import { setSessionData } from "../../redux/sessionSlice.js";
 import SessionCard from "../../components/cards/SessionCard.jsx";
 import { HandHelping } from "lucide-react";
 import Footer from "../../components/Footer.jsx";
